@@ -1,4 +1,3 @@
 myscripts
 =========
-
-Pffwitt's scripts
+My scripts backup repository
