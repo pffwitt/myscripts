@@ -1,4 +1,7 @@
 #!/usr/bin/python
+##################################################
+# Website crawler
+##################################################
 import re, urllib2, argparse, StringIO
 
 # Args
@@ -24,12 +27,10 @@ def findlinks(data):
                 links.append(urlfound)
     return links
 
-#def followlinks(links):
-#    for link in links:
-#       print "[found link] : " + link
+def followlinks(links):
+    for link in links:
+        print "[found link] : " + link
     
-        
-
 page = geturl(arg.url)
 blabla = findlinks(page)
 followlinks(blabla)
