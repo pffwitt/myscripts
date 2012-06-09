@@ -1,7 +1,4 @@
 #!/usr/bin/python
-##################################################
-# Website crawler
-##################################################
 import re, urllib2, argparse, StringIO
 
 # Args
