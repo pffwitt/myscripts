@@ -1,5 +1,8 @@
 #!/usr/bin/python
-import re, urllib2, argparse, StringIO
+import StringIO
+import argparse
+import re
+import urllib2
 
 # args
 parser = argparse.ArgumentParser()
@@ -18,38 +21,39 @@ def geturl(url):
     return page
 
 # find links in page content
-regexlinks = re.compile(r"(https?://[^\"\' >]+)")
-links = { arg.url : '1'}
+regexlinks = re.compile(r"(https?://[^\"\'<>\s]+)")
+
+links_found = []
 
 def findlinks(content):
+    links = []
     page = StringIO.StringIO(content)
     
     for line in page.readlines():
         match = regexlinks.search(line)
         if match:
             urlfound = match.group(1)
-            if urlfound not in links.keys():
-                links[urlfound] = 0
+            if urlfound not in links:
+                links.append(urlfound)
     return links
 
-#####################################################
-
+# base page
 page = geturl(arg.url)
+
+# base page links
 links_collection = findlinks(page)
+links_visited = []
 
-for link in links_collection:
-    page = geturl(arg.url)
-    links_collection = findlinks(page)
-
-print links_collection
-#for link in links_collection.popitem():
-#    if not links[link]:
-#        page = geturl(link)
-#        links_parse = findlinks(page)
-#        links_collection[link] = 1
-
-#links_collection = findlinks(page)
-     
-#for k,v in links_collection.items():
-#    print "%s = %s" % (k,v)
-
+# recursive link search
+while len(links_collection) > 0:
+    link = links_collection.pop()
+    links_visited.append(link)
+    link_content = geturl(link)
+    crawl_links = findlinks(link_content)
+    for crawl_link in crawl_links:
+        if crawl_link not in links_visited and crawl_link not in links_collection:
+            print "new link found : %s" % crawl_link
+            links_collection.append(crawl_link)
+        else:
+            print "%s already in links_visited" % crawl_link
+            
